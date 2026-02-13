@@ -15,6 +15,10 @@ I will update this repository from time to time as I add more features or if I e
 
 1. [https://hilmo.dev/blogs/2025/golang-backend-1](https://hilmo.dev/blogs/2025/golang-backend-1)
 
-## Running
+## Development
 
 Check the [Taskfile](./Taskfile.yml) for available commands.
+
+## Running
+
+Check docker compose file in [here](./docker/compose.yaml)

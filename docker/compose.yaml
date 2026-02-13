@@ -5,6 +5,7 @@ services:
     build:
       context: ..
       dockerfile: Dockerfile
+    image: ghcr.io/hilmoo/go-backend-example:latest
     depends_on:
       - app-migrate
     volumes:
@@ -14,12 +15,13 @@ services:
       - DATA_FOLDER=/app/data
     ports:
       - '8080:8080'
-    command: [ "version" ]
+    command: [ "serve" ]
     user: "1000:1000"
   app-migrate:
     build:
       context: ..
       dockerfile: Dockerfile
+    image: ghcr.io/hilmoo/go-backend-example:latest
     depends_on:
       - init-permissions
     volumes:
