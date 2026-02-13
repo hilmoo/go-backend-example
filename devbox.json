@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
+  "packages": [
+    "air@1.63.0",
+    "go@1.25.5",
+    "go-swag@1.16.6",
+    "goose@3.26.0",
+    "goreleaser@2.13.3"
+  ],
+  "shell": {
+    "init_hook": [
+      "export \"GOROOT=$(go env GOROOT)\""
+    ]
+  },
+  "env_from": ".env"
+}

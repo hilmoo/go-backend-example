@@ -1,0 +1,366 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample server for a Go backend example application.",
+        "title": "Go Backend Example API",
+        "contact": {},
+        "version": "0.0.1"
+    },
+    "basePath": "/api/",
+    "paths": {
+        "/todos": {
+            "get": {
+                "description": "Retrieves a list of todo items, optionally filtered by status.",
+                "tags": [
+                    "todos"
+                ],
+                "summary": "List todo items",
+                "parameters": [
+                    {
+                        "enum": [
+                            "pending",
+                            "in_progress",
+                            "completed"
+                        ],
+                        "type": "string",
+                        "description": "Filter by status",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/todo.ListTodosResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Creates a new todo item with the provided details.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Create a new todo item",
+                "parameters": [
+                    {
+                        "description": "Todo to create",
+                        "name": "todo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/todo.CreateTodoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/todo.CreateTodoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/todos/{id}": {
+            "get": {
+                "description": "Retrieves a todo item by its unique ID.",
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Get a todo item by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/todo.GetTodoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Updates the details of an existing todo item by its ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Update an existing todo item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated todo details",
+                        "name": "todo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/todo.UpdateTodoRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/todo.UpdateTodoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Deletes a todo item by its unique ID.",
+                "tags": [
+                    "todos"
+                ],
+                "summary": "Delete a todo item",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Todo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/todo.DeleteTodoResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/error.HttpErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "error.HttpErrorResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "Already populated by default error",
+                    "type": "integer"
+                },
+                "details": {
+                    "description": "Further error details",
+                    "type": "object",
+                    "additionalProperties": {}
+                },
+                "id": {
+                    "description": "The error ID\n\nUseful when trying to identify various errors in application logic.",
+                    "type": "string"
+                },
+                "message": {
+                    "description": "Already populated by default error",
+                    "type": "string"
+                },
+                "reason": {
+                    "description": "A human-readable reason for the error\n\nexample: User with ID 1234 does not exist.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Already populated by default error",
+                    "type": "string"
+                }
+            }
+        },
+        "todo.CreateTodoRequest": {
+            "type": "object",
+            "required": [
+                "status",
+                "title"
+            ],
+            "properties": {
+                "details": {
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "pending",
+                        "in_progress",
+                        "completed"
+                    ]
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                }
+            }
+        },
+        "todo.CreateTodoResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "todo.DeleteTodoResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "todo.GetTodoResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "todo.ListTodosResponse": {
+            "type": "object",
+            "properties": {
+                "todos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/todo.GetTodoResponse"
+                    }
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "todo.UpdateTodoRequest": {
+            "type": "object",
+            "required": [
+                "id",
+                "status",
+                "title"
+            ],
+            "properties": {
+                "details": {
+                    "type": "string",
+                    "maxLength": 500
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "pending",
+                        "in_progress",
+                        "completed"
+                    ]
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 1
+                }
+            }
+        },
+        "todo.UpdateTodoResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

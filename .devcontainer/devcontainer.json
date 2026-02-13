@@ -1,0 +1,26 @@
+{
+    "name": "Devbox Remote Container",
+    "image": "ghcr.io/hilmoo/containers/my-devcontainer:v0.2.0",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "moby": "false"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {},
+            "extensions": [
+                "golang.go",
+                "jetpack-io.devbox",
+                "mkhl.direnv"
+            ]
+        }
+    },
+    "remoteUser": "vscode",
+    "postCreateCommand": ".devcontainer/post-create.sh",
+    "forwardPorts": [
+        8080, // The app
+        6274, // Mcp inspector
+        6277 // MCP inspector proxy
+    ]
+}

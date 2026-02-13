@@ -1,0 +1,35 @@
+name: go-backend-example
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    depends_on:
+      - app-migrate
+    volumes:
+      - ./data:/app/data
+    environment:
+      - ENABLE_HEALTH=true
+      - DATA_FOLDER=/app/data
+    ports:
+      - '8080:8080'
+    command: [ "version" ]
+    user: "1000:1000"
+  app-migrate:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    depends_on:
+      - init-permissions
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DATA_FOLDER=/app/data
+    command: [ "migrate", "up", "migration" ]
+    user: "1000:1000"
+  init-permissions:
+    image: busybox:latest
+    volumes:
+      - ./data:/data
+    command: "chown -R 1000:1000 /data"

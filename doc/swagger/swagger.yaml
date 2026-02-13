@@ -1,0 +1,253 @@
+basePath: /api/
+definitions:
+  error.HttpErrorResponse:
+    properties:
+      code:
+        description: Already populated by default error
+        type: integer
+      details:
+        additionalProperties: {}
+        description: Further error details
+        type: object
+      id:
+        description: |-
+          The error ID
+
+          Useful when trying to identify various errors in application logic.
+        type: string
+      message:
+        description: Already populated by default error
+        type: string
+      reason:
+        description: |-
+          A human-readable reason for the error
+
+          example: User with ID 1234 does not exist.
+        type: string
+      status:
+        description: Already populated by default error
+        type: string
+    type: object
+  todo.CreateTodoRequest:
+    properties:
+      details:
+        maxLength: 500
+        type: string
+      status:
+        enum:
+        - pending
+        - in_progress
+        - completed
+        type: string
+      title:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - status
+    - title
+    type: object
+  todo.CreateTodoResponse:
+    properties:
+      details:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  todo.DeleteTodoResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  todo.GetTodoResponse:
+    properties:
+      details:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  todo.ListTodosResponse:
+    properties:
+      todos:
+        items:
+          $ref: '#/definitions/todo.GetTodoResponse'
+        type: array
+      total:
+        type: integer
+    type: object
+  todo.UpdateTodoRequest:
+    properties:
+      details:
+        maxLength: 500
+        type: string
+      id:
+        type: string
+      status:
+        enum:
+        - pending
+        - in_progress
+        - completed
+        type: string
+      title:
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - id
+    - status
+    - title
+    type: object
+  todo.UpdateTodoResponse:
+    properties:
+      details:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a sample server for a Go backend example application.
+  title: Go Backend Example API
+  version: 0.0.1
+paths:
+  /todos:
+    get:
+      description: Retrieves a list of todo items, optionally filtered by status.
+      parameters:
+      - description: Filter by status
+        enum:
+        - pending
+        - in_progress
+        - completed
+        in: query
+        name: status
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.ListTodosResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+      summary: List todo items
+      tags:
+      - todos
+    post:
+      consumes:
+      - application/json
+      description: Creates a new todo item with the provided details.
+      parameters:
+      - description: Todo to create
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/todo.CreateTodoRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/todo.CreateTodoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+      summary: Create a new todo item
+      tags:
+      - todos
+  /todos/{id}:
+    delete:
+      description: Deletes a todo item by its unique ID.
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.DeleteTodoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+      summary: Delete a todo item
+      tags:
+      - todos
+    get:
+      description: Retrieves a todo item by its unique ID.
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.GetTodoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+      summary: Get a todo item by ID
+      tags:
+      - todos
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of an existing todo item by its ID.
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated todo details
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/todo.UpdateTodoRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/todo.UpdateTodoResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/error.HttpErrorResponse'
+      summary: Update an existing todo item
+      tags:
+      - todos
+swagger: "2.0"

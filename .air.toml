@@ -1,0 +1,16 @@
+#:schema https://json.schemastore.org/any.json
+
+root = "."
+tmp_dir = ".bin"
+
+[build]
+cmd = "go build -o .bin/main.bin cmd/main.go"
+bin = ".bin/main.bin"
+args_bin = ["serve"]
+stop_on_error = true
+include_dir = ["internal"]
+send_interrupt = true
+kill_delay = "11s"
+
+[misc]
+clean_on_exit = true
